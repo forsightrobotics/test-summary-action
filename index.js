@@ -509,6 +509,14 @@ function parseJunitXml(xml) {
                 let details = undefined;
                 if (testcase.skipped) {
                     status = TestStatus.Skip;
+                    const element = testcase.skipped[0];
+                    message = element.$ ? element.$.message : undefined;
+                    if (typeof element === "string") {
+                        details = element;
+                    }
+                    else {
+                        details = element._;
+                    }
                     counts.skipped++;
                 }
                 else if (failure_or_error = testcase.failure || testcase.error) {
