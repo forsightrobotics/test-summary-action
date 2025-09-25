@@ -245,8 +245,11 @@ async function parseJunitXml(xml: any): Promise<TestResult> {
 
                 const element = testcase.skipped[0]
                 message = element.$ ? element.$.message : undefined
-                details = testcase.$.file ? testcase.$.file + ":" + testcase.$.line : undefined
-                details = testcase.$.time ? details + " ( Time: " + testcase.$.time + "s)" : details
+                if (typeof element === "string") {
+                    details = element;
+                } else {
+                    details = element._;
+                }                
 
                 counts.skipped++
             } else if (failure_or_error = testcase.failure || testcase.error) {
@@ -255,8 +258,11 @@ async function parseJunitXml(xml: any): Promise<TestResult> {
                 const element = failure_or_error[0]
 
                 message = element.$ ? element.$.message : undefined
-                details = testcase.$.file ? testcase.$.file + ":" + testcase.$.line : undefined
-                details = testcase.$.time ? details + " ( Time: " + testcase.$.time + "s)" : details                
+                if (typeof element === "string") {
+                    details = element
+                } else {
+                    details = element._
+                }
 
                 counts.failed++
             } else {
